@@ -49,7 +49,11 @@
                 if (String.IsNullOrEmpty(token)) return result;
                 String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/createPayment";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
+                // If callbackUrl and redirectUrl are empty, take the values ​​of [curl] and [rurl] in the developer center.
+                // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
+                // The sorting rules of Json attribute data are arranged from [a-z]
                 String bodyJson = "{\"customer\":{\"email\":\"" + customerEmail + "\",\"name\":\"" + customerName + "\",\"phone\":\"" + customerPhone + "\"},\"method\":\"" + payMethod + "\",\"order\":{\"additionalData\":\"\",\"amount\":\"" + amount.ToString() + "\",\"currencyType\":\"" + (String.IsNullOrEmpty(currency) ? "MYR" : currency) + "\",\"id\":\"" + orderId + "\",\"title\":\"Payment\"}}";
+                //String bodyJson = "{\"callbackUrl\":\"https://www.google.com\",\"customer\":{\"email\":\"" + customerEmail + "\",\"name\":\"" + customerName + "\",\"phone\":\"" + customerPhone + "\"},\"method\":\"" + payMethod + "\",\"order\":{\"additionalData\":\"\",\"amount\":\"" + amount.ToString() + "\",\"currencyType\":\"" + (String.IsNullOrEmpty(currency) ? "MYR" : currency) + "\",\"id\":\"" + orderId + "\",\"title\":\"Payment\"},\"redirectUrl\":\"https://www.google.com\"}";
                 String base64ReqBody = sortedAfterToBased64(bodyJson);
                 String signature = createSignature(cnst, base64ReqBody);
                 String encryptData = symEncrypt(base64ReqBody);
@@ -109,7 +113,11 @@
                 if (String.IsNullOrEmpty(token)) return result;
                 String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/withdrawRequest";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
-                String bodyJson = "{\"order\":{\"amount\":\"" + amount.ToString() + "\",\"currencyType\":\"" + (String.IsNullOrEmpty(currency) ? "MYR" : currency) + "\",\"id\":\"" + orderId + "\"},\"recipient\":{\"email\":\"" + recipientEmail + "\",\"methodRef\":\"" + refName + "\",\"methodType\":\"" + bankCode + "\",\"methodValue\":\"" + accountNumber + "\",\"name\":\"" + cardholder + "\",\"phone\":\"" + recipientPhone + "\"}}";
+                // payoutspeed contain "fast", "normal", "slow" ,default is : "fast"
+                // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
+                // The sorting rules of Json attribute data are arranged from [a-z]
+                String bodyJson = "{\"order\":{\"amount\":\"" + amount.ToString() + "\",\"currencyType\":\"" + (String.IsNullOrEmpty(currency) ? "MYR" : currency) + "\",\"id\":\"" + orderId + "\"},\"payoutspeed\":\"normal\",\"recipient\":{\"email\":\"" + recipientEmail + "\",\"methodRef\":\"" + refName + "\",\"methodType\":\"" + bankCode + "\",\"methodValue\":\"" + accountNumber + "\",\"name\":\"" + cardholder + "\",\"phone\":\"" + recipientPhone + "\"}}";
+                //String bodyJson = "{\"order\":{\"amount\":\"" + amount.ToString() + "\",\"currencyType\":\"" + (String.IsNullOrEmpty(currency) ? "MYR" : currency) + "\",\"id\":\"" + orderId + "\"},\"recipient\":{\"email\":\"" + recipientEmail + "\",\"methodRef\":\"" + refName + "\",\"methodType\":\"" + bankCode + "\",\"methodValue\":\"" + accountNumber + "\",\"name\":\"" + cardholder + "\",\"phone\":\"" + recipientPhone + "\"}}";
                 String base64ReqBody = sortedAfterToBased64(bodyJson);
                 String signature = createSignature(cnst, base64ReqBody);
                 String encryptData = symEncrypt(base64ReqBody);
@@ -158,6 +166,9 @@
                 if (String.IsNullOrEmpty(token)) return result;
                 String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/getTransactionStatusById";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
+                // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
+                // The sorting rules of Json attribute data are arranged from [a-z]
+                // type : 1 deposit,2 withdrawal
                 String bodyJson = "{\"transactionId\":\"" + orderId + "\",\"type\":" + type + "}";
                 String base64ReqBody = sortedAfterToBased64(bodyJson);
                 String signature = createSignature(cnst, base64ReqBody);
