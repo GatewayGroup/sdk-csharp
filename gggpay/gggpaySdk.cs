@@ -1,4 +1,4 @@
-﻿namespace gggpay
+﻿namespace gateway
 {
     using System;
     using System.IO;
@@ -9,9 +9,9 @@
     using System.Net;
 
     /// <summary>
-    /// gggpay sdk
+    /// gateway sdk
     /// </summary>
-    public static class gggpaySdk
+    public static class gatewaySdk
     {
         /// <summary>
         /// rsa algorithm
@@ -47,7 +47,7 @@
             {
                 String token = getToken();
                 if (String.IsNullOrEmpty(token)) return result;
-                String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/createPayment";
+                String requestUrl = "gateway/" + gatewayCfg.VERSION_NO + "/createPayment";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
                 // If callbackUrl and redirectUrl are empty, take the values ​​of [curl] and [rurl] in the developer center.
                 // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
@@ -111,7 +111,7 @@
             {
                 String token = getToken();
                 if (String.IsNullOrEmpty(token)) return result;
-                String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/withdrawRequest";
+                String requestUrl = "gateway/" + gatewayCfg.VERSION_NO + "/withdrawRequest";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
                 // payoutspeed contain "fast", "normal", "slow" ,default is : "fast"
                 // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
@@ -164,7 +164,7 @@
             {
                 String token = getToken();
                 if (String.IsNullOrEmpty(token)) return result;
-                String requestUrl = "gggpay/" + gggpayCfg.VERSION_NO + "/getTransactionStatusById";
+                String requestUrl = "gateway/" + gatewayCfg.VERSION_NO + "/getTransactionStatusById";
                 Dictionary<String, String> cnst = generateConstant(requestUrl);
                 // Remember, the format of json and the order of json attributes must be the same as the SDK specifications.
                 // The sorting rules of Json attribute data are arranged from [a-z]
@@ -206,12 +206,12 @@
         {
             if (String.IsNullOrEmpty(EncryptAuthInfo))
             {
-                String authString = stringToBase64(gggpayCfg.CLIENT_ID + ":" + gggpayCfg.CLIENT_SECRET);
+                String authString = stringToBase64(gatewayCfg.CLIENT_ID + ":" + gatewayCfg.CLIENT_SECRET);
                 EncryptAuthInfo = publicEncrypt(authString);
             }
             String json = "{\"data\":\"" + EncryptAuthInfo + "\"}";
             String[] keys = new String[] { "code", "encryptedToken" };
-            Dictionary<String, String> dict = post("gggpay/" + gggpayCfg.VERSION_NO + "/createToken", "", "", json, "", "", keys);
+            Dictionary<String, String> dict = post("gateway/" + gatewayCfg.VERSION_NO + "/createToken", "", "", json, "", "", keys);
             String token = "";
             if (!String.IsNullOrEmpty(dict["code"]) && !String.IsNullOrEmpty(dict["encryptedToken"]) && dict["code"] == "1")
             {
@@ -228,13 +228,13 @@
         /// <returns></returns>
         private static Dictionary<String, String> post(String url, String token, String signature, String json, String nonceStr, String timestamp, String[] keys)
         {
-            if (gggpayCfg.BASE_URL.EndsWith("/"))
+            if (gatewayCfg.BASE_URL.EndsWith("/"))
             {
-                url = gggpayCfg.BASE_URL + url;
+                url = gatewayCfg.BASE_URL + url;
             }
             else
             {
-                url = gggpayCfg.BASE_URL + "/" + url;
+                url = gatewayCfg.BASE_URL + "/" + url;
             }
             WebRequest webRequest = WebRequest.Create(url);
             webRequest.Credentials = CredentialCache.DefaultCredentials;
@@ -374,8 +374,8 @@
         private static String symEncrypt(String message)
         {
             RijndaelManaged rijndael = new RijndaelManaged();
-            byte[] key = stringToBytes(gggpayCfg.CLIENT_SYMMETRIC_KEY);
-            byte[] iv = generateIv(gggpayCfg.CLIENT_SYMMETRIC_KEY);
+            byte[] key = stringToBytes(gatewayCfg.CLIENT_SYMMETRIC_KEY);
+            byte[] iv = generateIv(gatewayCfg.CLIENT_SYMMETRIC_KEY);
             rijndael.Key = key;
             rijndael.IV = iv;
             rijndael.Mode = CipherMode.CBC;
@@ -395,8 +395,8 @@
         public static String symDecrypt(String encryptedMessage)
         {
             RijndaelManaged rijndael = new RijndaelManaged();
-            byte[] key = stringToBytes(gggpayCfg.CLIENT_SYMMETRIC_KEY);
-            byte[] iv = generateIv(gggpayCfg.CLIENT_SYMMETRIC_KEY);
+            byte[] key = stringToBytes(gatewayCfg.CLIENT_SYMMETRIC_KEY);
+            byte[] iv = generateIv(gatewayCfg.CLIENT_SYMMETRIC_KEY);
             rijndael.Key = key;
             rijndael.IV = iv;
             rijndael.Mode = CipherMode.CBC;
@@ -443,7 +443,7 @@
         /// <returns></returns>
         private static RSACryptoServiceProvider getServerPublicKey()
         {
-            String key = gggpayCfg.SERVER_PUB_KEY.Replace("-----BEGIN PUBLIC KEY-----", "");
+            String key = gatewayCfg.SERVER_PUB_KEY.Replace("-----BEGIN PUBLIC KEY-----", "");
             key = key.Replace("-----END PUBLIC KEY-----", "");
             key = key.Replace("\\n", "");
             key = key.Replace(" ", "");
@@ -558,7 +558,7 @@
         /// <returns></returns>
         private static RSACryptoServiceProvider getPrivateKey()
         {
-            String key = gggpayCfg.PRIVATE_KEY.Replace("-----BEGIN RSA PRIVATE KEY-----", "");
+            String key = gatewayCfg.PRIVATE_KEY.Replace("-----BEGIN RSA PRIVATE KEY-----", "");
             key = key.Replace("-----END RSA PRIVATE KEY-----", "");
             key = key.Replace("\\n", "");
             key = key.Replace(" ", "");

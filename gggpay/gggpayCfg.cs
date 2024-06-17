@@ -1,11 +1,11 @@
-﻿namespace gggpay
+﻿namespace gateway
 {
     using System;
 
     /// <summary>
-    /// gggpay config
+    /// gateway config
     /// </summary>
-    public static class gggpayCfg
+    public static class gatewayCfg
     {
         //-- begin config ----------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@
         internal static String VERSION_NO = "v1";
 
         /// <summary>
-        /// GGGPay Api Url
+        /// gateway Api Url
         /// </summary>
         internal static String BASE_URL = "http://localhost:3000/";
 
@@ -83,7 +83,7 @@
         /// <summary>
         /// initialize this configuration
         /// </summary>
-        /// <param name="apiUrl">apiUrl GGGPay Api Url</param>
+        /// <param name="apiUrl">apiUrl gateway Api Url</param>
         /// <param name="appId">appId in developer settings : App Id</param>
         /// <param name="key">key in developer settings : Key</param>
         /// <param name="secret">secret in developer settings : secret</param>
